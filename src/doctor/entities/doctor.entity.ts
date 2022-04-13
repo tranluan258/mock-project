@@ -17,6 +17,9 @@ export class Doctor {
   @Column('varchar', { length: 50, nullable: false })
   name: string;
 
+  @Column({ length: 60, nullable: false })
+  email: string;
+
   @OneToOne(() => Faculty)
   @JoinColumn()
   faculty: Faculty;

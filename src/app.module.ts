@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from './account/account.module';
@@ -8,10 +8,17 @@ import { RoomModule } from './room/room.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { FacultyModule } from './faculty/faculty.module';
 import { PermissionModule } from './permission/permission.module';
-
+import { AuthModule } from './auth/auth.module';
+import * as redisStore from 'cache-manager-redis-store';
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    CacheModule.register({
+      store: redisStore,
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      isGlobal: true,
+    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DATABASE_HOST,
@@ -29,6 +36,7 @@ import { PermissionModule } from './permission/permission.module';
     ScheduleModule,
     FacultyModule,
     PermissionModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
