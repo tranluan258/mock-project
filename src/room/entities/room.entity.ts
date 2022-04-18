@@ -9,6 +9,6 @@ export class Room {
   @Column()
   name: number;
 
-  @OneToMany(() => Schedule, (schedule) => schedule.patient)
+  @OneToMany(() => Schedule, (schedule) => schedule.room)
   schedule: Schedule[];
 }

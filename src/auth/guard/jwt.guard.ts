@@ -22,13 +22,14 @@ export class JwtGuard extends AuthGuard('jwt') {
     this.action = request.method.toLocaleLowerCase();
     return super.canActivate(context);
   }
+
   handleRequest(err, user) {
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
-    if (user.role != this.role) throw new ForbiddenException('No role');
-
     if (user.role == Role.Admin) return user;
+
+    if (user.role != this.role) throw new ForbiddenException('No role');
 
     const permission = user.permission;
     const check = permission?.[this.resource]?.includes(this.action);

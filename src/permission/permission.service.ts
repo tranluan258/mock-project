@@ -1,4 +1,4 @@
-import { UpdatePermissionDto } from './dto/update-permission,dto';
+import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';

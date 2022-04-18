@@ -47,10 +47,10 @@ export class Schedule {
   doctorId: number;
 
   @Column({
-    name: 'schedule_id',
+    name: 'faculty_id',
     select: false,
   })
-  scheduleId: number;
+  facultyId: number;
 
   @Column({
     name: 'room_id',
@@ -71,6 +71,6 @@ export class Schedule {
   faculty: Faculty;
 
   @ManyToOne(() => Room, (room) => room.schedule)
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  @JoinColumn([{ name: 'room_id', referencedColumnName: 'id' }])
   room: Room;
 }

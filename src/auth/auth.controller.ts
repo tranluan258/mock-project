@@ -27,12 +27,12 @@ export class AuthController {
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
   async signIn(@Body() loginDto: LoginDto): Promise<object> {
-    const result = await this.authService.login(loginDto);
-    if (result == null)
+    const account = await this.authService.login(loginDto);
+    if (account == null)
       throw new HttpException('Not found account', HttpStatus.NOT_FOUND);
 
     const permission = {};
-    const userPermission = result.permissions;
+    const userPermission = account.permissions;
     userPermission?.forEach((value: any) => {
       const resource = value.resource;
       const action = value.action;
@@ -42,10 +42,10 @@ export class AuthController {
     });
 
     const payload = {
-      id: result.id,
-      username: result.username,
+      id: account.id,
+      username: account.username,
       permission: permission,
-      role: result.role,
+      role: account.role,
     };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -89,6 +89,7 @@ export class AuthController {
     const payload: object = JSON.parse(
       await this.cacheManager.get(tokenDto.token),
     );
+
     if (!payload)
       throw new HttpException(
         'Not found token you login again',
