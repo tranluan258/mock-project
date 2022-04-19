@@ -10,13 +10,18 @@ import { Faculty } from '../../faculty/entities/faculty.entity';
 import { Patient } from '../../patient/entities/patient.entity';
 import { Room } from '../../room/entities/room.entity';
 import 'reflect-metadata';
+import { Status } from '../enum/status.enum';
 
 @Entity()
 export class Schedule {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('char', { length: 50 })
+  @Column({
+    type: 'enum',
+    enum: Status,
+    default: Status.Create,
+  })
   status: string;
 
   @Column('date')

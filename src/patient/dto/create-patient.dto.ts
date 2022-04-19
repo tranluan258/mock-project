@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreatePatientDto {
   @IsEmail()
@@ -13,6 +20,8 @@ export class CreatePatientDto {
   name: string;
 
   @IsNumber()
+  @Min(18)
+  @Max(50)
   @IsNotEmpty()
   @ApiProperty()
   age: number;
