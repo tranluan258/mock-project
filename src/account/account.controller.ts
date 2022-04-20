@@ -1,3 +1,4 @@
+import { ResponseCreateDto, ResponseListDto } from './dto/response.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Role } from './enum/role.enum';
 import { JwtGuard } from './../auth/guard/jwt.guard';
@@ -30,6 +31,10 @@ export class AccountController {
 
   @Post('sign-up')
   @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponseCreateDto,
+  })
   async create(@Body() createAccountDto: CreateAccountDto): Promise<object> {
     try {
       const result = await this.accountService.create(createAccountDto);
@@ -51,6 +56,9 @@ export class AccountController {
   @Post('add-permission')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
   async addPermission(
     @Body() addPermissionForAccountDto: AddPermissionForAccountDto,
   ): Promise<object> {
@@ -76,6 +84,10 @@ export class AccountController {
   @UseGuards(new JwtGuard(Role.Admin))
   @Get('get-all')
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponseListDto,
+  })
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<object> {
     try {

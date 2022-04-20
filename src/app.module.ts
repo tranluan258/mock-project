@@ -28,6 +28,7 @@ const customLoggerFormatter = winston.format.printf((info) => {
       transports: [
         new winston.transports.Console({
           format: winston.format.combine(
+            winston.format.colorize(),
             winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss Z' }),
             customLoggerFormatter,
           ),

@@ -1,3 +1,4 @@
+import { ResponseSignInDto } from './dto/response.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { TokenDto } from './dto/token.dto';
 import { LoginDto } from 'src/auth/dto/login.dto';
@@ -12,7 +13,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtService } from '@nestjs/jwt';
 import { Cache } from 'cache-manager';
 import { Logger } from 'winston';
@@ -29,6 +30,10 @@ export class AuthController {
 
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponseSignInDto,
+  })
   async signIn(@Body() loginDto: LoginDto): Promise<object> {
     try {
       const account = await this.authService.login(loginDto);
