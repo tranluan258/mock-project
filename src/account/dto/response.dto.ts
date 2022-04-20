@@ -1,6 +1,6 @@
 import { Account } from './../entities/account.entity';
 import { ApiProperty } from '@nestjs/swagger';
-export class ResponseCreateDto {
+export class ResponseAccountDto {
   @ApiProperty()
   message: string;
 
@@ -8,7 +8,7 @@ export class ResponseCreateDto {
   data: Account;
 }
 
-export class ResponseListDto {
+export class ResponseListAccountDto {
   @ApiProperty()
   message: string;
 

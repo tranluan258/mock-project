@@ -17,12 +17,13 @@ import {
   Inject,
 } from '@nestjs/common';
 import { PatientService } from './patient.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Patient } from './entities/patient.entity';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Logger } from 'winston';
+import { ResponsePatientDto, ResponseListPatientDto } from './dto/response.dto';
 
 @UseGuards(new JwtGuard(Role.Employee))
 @ApiTags('Patient')
@@ -34,6 +35,10 @@ export class PatientController {
   ) {}
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponseListPatientDto,
+  })
   @Get('get-all')
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<object> {
@@ -54,6 +59,10 @@ export class PatientController {
   }
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponsePatientDto,
+  })
   @Post('add-patient')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createPatientDto: CreatePatientDto): Promise<object> {

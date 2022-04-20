@@ -1,6 +1,10 @@
+import {
+  ResponseListPermissionDto,
+  ResponsePermissionDto,
+} from './dto/response.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { Role } from 'src/account/enum/role.enum';
 import {
@@ -32,6 +36,10 @@ export class PermissionController {
   ) {}
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponsePermissionDto,
+  })
   @Post('create-permission')
   async create(
     @Body() createPermissionDto: CreatePermissionDto,
@@ -53,6 +61,10 @@ export class PermissionController {
   }
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponseListPermissionDto,
+  })
   @Get('get-all-permission')
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<object> {

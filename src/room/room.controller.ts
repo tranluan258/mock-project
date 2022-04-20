@@ -1,3 +1,4 @@
+import { ResponseRoomDto, ResponseListRoomDto } from './dto/response.dto';
 import {
   Body,
   Controller,
@@ -13,7 +14,7 @@ import {
   UseGuards,
   Inject,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { Role } from 'src/account/enum/role.enum';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -34,6 +35,10 @@ export class RoomController {
 
   @UseGuards(new JwtGuard(Role.Employee))
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponseListRoomDto,
+  })
   @Get('get-all-room')
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<object> {
@@ -55,6 +60,10 @@ export class RoomController {
 
   @UseGuards(new JwtGuard(Role.Admin))
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponseRoomDto,
+  })
   @Post('create-room')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createRoomDto: CreateRoomDto): Promise<object> {

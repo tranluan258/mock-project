@@ -38,8 +38,8 @@ export class AccountService {
     return await getConnection()
       .createQueryBuilder()
       .relation(Account, 'permissions')
-      .of(addPermissionForAccountDto.permissionId)
-      .add(addPermissionForAccountDto.accountId);
+      .of(addPermissionForAccountDto.accountId)
+      .add(addPermissionForAccountDto.permissionId);
   }
 
   async findAll(): Promise<Account[]> {

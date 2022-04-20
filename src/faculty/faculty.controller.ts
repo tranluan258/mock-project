@@ -1,3 +1,4 @@
+import { ResponseFacultyDto, ResponseListFacultyDto } from './dto/reponse.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import {
   Body,
@@ -14,7 +15,7 @@ import {
   Delete,
   Inject,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from 'src/account/enum/role.enum';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -33,6 +34,10 @@ export class FacultyController {
   ) {}
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponseFacultyDto,
+  })
   @Post('create-faculty')
   @UseGuards(new JwtGuard(Role.Admin))
   @HttpCode(HttpStatus.CREATED)
@@ -56,6 +61,10 @@ export class FacultyController {
   }
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponseListFacultyDto,
+  })
   @Get('get-all-faculty')
   @UseGuards(new JwtGuard(Role.Employee))
   @HttpCode(HttpStatus.OK)

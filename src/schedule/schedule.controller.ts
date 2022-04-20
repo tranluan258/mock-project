@@ -1,4 +1,8 @@
 import {
+  ResponseScheduleDto,
+  ResponseListScheduleDto,
+} from './dto/response.dto';
+import {
   Body,
   Controller,
   Get,
@@ -11,7 +15,7 @@ import {
   Inject,
   HttpException,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from 'src/account/enum/role.enum';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
@@ -33,6 +37,10 @@ export class ScheduleController {
   ) {}
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponseScheduleDto,
+  })
   @Post('create-schedule')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createScheduleDto: CreateScheduleDto): Promise<object> {
@@ -56,6 +64,10 @@ export class ScheduleController {
   }
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponseListScheduleDto,
+  })
   @ApiQuery({ name: 'status', required: false, enum: Status })
   @Get('get-all-schedule')
   @HttpCode(HttpStatus.OK)

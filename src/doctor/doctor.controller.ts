@@ -23,7 +23,7 @@ import { Doctor } from './entities/doctor.entity';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Logger } from 'winston';
-import { ResponseCreateDto, ResponseListDto } from './dto/response.dto';
+import { ResponseDoctorDto, ResponseListDoctorDto } from './dto/response.dto';
 
 @ApiTags('Doctor')
 @Controller('doctor')
@@ -36,7 +36,7 @@ export class DoctorController {
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: ResponseCreateDto,
+    type: ResponseDoctorDto,
   })
   @Post('create-doctor')
   @UseGuards(new JwtGuard(Role.Admin))
@@ -61,7 +61,7 @@ export class DoctorController {
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
-    type: ResponseListDto,
+    type: ResponseListDoctorDto,
   })
   @Get('get-all-doctor')
   @UseGuards(new JwtGuard(Role.Employee))

@@ -31,7 +31,6 @@ export class Account {
   })
   role: Role;
 
-  @ApiProperty({ type: Permission, isArray: true })
   @ManyToMany(() => Permission, {
     cascade: true,
   })

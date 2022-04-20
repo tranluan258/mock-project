@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Doctor } from '../entities/doctor.entity';
 
-export class ResponseCreateDto {
+export class ResponseDoctorDto {
   @ApiProperty()
-  messgae: string;
+  message: string;
 
   @ApiProperty({ type: Doctor })
   data: Doctor;
 }
 
-export class ResponseListDto {
+export class ResponseListDoctorDto {
   @ApiProperty()
-  messgae: string;
+  message: string;
 
   @ApiProperty({ type: Doctor, isArray: true })
   data: Doctor[];

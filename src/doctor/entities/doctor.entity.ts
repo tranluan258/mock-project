@@ -31,12 +31,10 @@ export class Doctor {
   })
   facultyId: number;
 
-  @ApiProperty({ type: Faculty })
   @ManyToOne(() => Faculty)
   @JoinColumn([{ name: 'faculty_id', referencedColumnName: 'id' }])
   faculty: Faculty;
 
-  @ApiProperty({ type: Schedule, isArray: true })
   @OneToMany(() => Schedule, (schedule) => schedule.doctor)
   schedule: Schedule[];
 }

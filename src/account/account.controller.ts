@@ -1,4 +1,4 @@
-import { ResponseCreateDto, ResponseListDto } from './dto/response.dto';
+import { ResponseAccountDto, ResponseListAccountDto } from './dto/response.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Role } from './enum/role.enum';
 import { JwtGuard } from './../auth/guard/jwt.guard';
@@ -33,7 +33,7 @@ export class AccountController {
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: ResponseCreateDto,
+    type: ResponseAccountDto,
   })
   async create(@Body() createAccountDto: CreateAccountDto): Promise<object> {
     try {
@@ -86,7 +86,7 @@ export class AccountController {
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
-    type: ResponseListDto,
+    type: ResponseAccountDto,
   })
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<object> {
