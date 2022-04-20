@@ -10,8 +10,37 @@ import { FacultyModule } from './faculty/faculty.module';
 import { PermissionModule } from './permission/permission.module';
 import { AuthModule } from './auth/auth.module';
 import * as redisStore from 'cache-manager-redis-store';
+import * as winston from 'winston';
+import { WinstonModule } from 'nest-winston';
+
+const customLoggerFormatter = winston.format.printf((info) => {
+  if (info.level == 'error' && info.error) {
+    return `[${info.timestamp}] [${info.context}] [${info.level}] ${
+      info.error.stack
+    }\n${JSON.stringify(info.error, null, 4)}`;
+  }
+
+  return `[${info.timestamp}] [${info.context}] [${info.level}] ${info.message}`;
+});
 @Module({
   imports: [
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss Z' }),
+            customLoggerFormatter,
+          ),
+        }),
+        new winston.transports.File({
+          format: winston.format.combine(
+            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss Z' }),
+            customLoggerFormatter,
+          ),
+          filename: 'src/logs/combine.log',
+        }),
+      ],
+    }),
     CacheModule.register({
       store: redisStore,
       host: process.env.REDIS_HOST,

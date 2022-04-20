@@ -1,6 +1,7 @@
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Role } from './enum/role.enum';
 import { JwtGuard } from './../auth/guard/jwt.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateAccountDto } from './dto/create-account.dto';
 import {
   Body,
@@ -10,6 +11,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Inject,
   Param,
   ParseIntPipe,
   Post,
@@ -17,19 +19,32 @@ import {
 } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { AddPermissionForAccountDto } from './dto/add-permission-account.dto';
+import { Logger } from 'winston';
 @ApiTags('Account')
 @Controller('account')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(
+    private readonly accountService: AccountService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER) private logger: Logger,
+  ) {}
 
   @Post('sign-up')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createAccountDto: CreateAccountDto): Promise<object> {
-    const result = await this.accountService.create(createAccountDto);
-    return {
-      message: 'Create account success',
-      data: result,
-    };
+    try {
+      const result = await this.accountService.create(createAccountDto);
+      return {
+        message: 'Create account success',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error signUp account',
+        error,
+        context: 'AccountController:signUp',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @UseGuards(new JwtGuard(Role.Admin))
@@ -39,14 +54,23 @@ export class AccountController {
   async addPermission(
     @Body() addPermissionForAccountDto: AddPermissionForAccountDto,
   ): Promise<object> {
-    const result = await this.accountService.addPermission(
-      addPermissionForAccountDto,
-    );
+    try {
+      const result = await this.accountService.addPermission(
+        addPermissionForAccountDto,
+      );
 
-    return {
-      message: 'Add permission for account success',
-      data: result,
-    };
+      return {
+        message: 'Add permission for account success',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error addPermission account',
+        error,
+        context: 'AccountController:signIn',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @UseGuards(new JwtGuard(Role.Admin))
@@ -54,11 +78,20 @@ export class AccountController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<object> {
-    const result = await this.accountService.findAll();
-    return {
-      message: 'List account',
-      data: result,
-    };
+    try {
+      const result = await this.accountService.findAll();
+      return {
+        message: 'List account',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error list account',
+        error,
+        context: 'AccountController:findAll',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @UseGuards(new JwtGuard(Role.Admin))
@@ -66,12 +99,24 @@ export class AccountController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id', ParseIntPipe) id: number): Promise<object> {
-    const result = await this.accountService.remove(id);
-    if (result.affected <= 0)
-      throw new HttpException('Not found account', HttpStatus.NOT_FOUND);
-    return {
-      message: 'Delete account success',
-      data: result,
-    };
+    try {
+      const result = await this.accountService.remove(id);
+      if (result.affected <= 0)
+        throw new HttpException('Not found account', HttpStatus.NOT_FOUND);
+      return {
+        message: 'Delete account success',
+        data: result,
+      };
+    } catch (error) {
+      if (error instanceof HttpException)
+        throw new HttpException(error.getResponse(), error.getStatus());
+
+      this.logger.error({
+        message: 'Error delete account',
+        error,
+        context: 'AccountController:delete',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

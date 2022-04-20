@@ -1,11 +1,15 @@
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Role } from 'src/account/enum/role.enum';
 import { JwtGuard } from './../auth/guard/jwt.guard';
 import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
+  HttpException,
   HttpStatus,
+  Inject,
   Param,
   ParseIntPipe,
   Post,
@@ -18,34 +22,56 @@ import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { Doctor } from './entities/doctor.entity';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { Logger } from 'winston';
 
 @ApiTags('Doctor')
 @Controller('doctor')
 export class DoctorController {
-  constructor(private readonly doctorService: DoctorService) {}
+  constructor(
+    private readonly doctorService: DoctorService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER) private logger: Logger,
+  ) {}
 
   @ApiBearerAuth()
   @Post('create-doctor')
   @UseGuards(new JwtGuard(Role.Admin))
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createDoctorDto: CreateDoctorDto): Promise<object> {
-    const result: Doctor = await this.doctorService.create(createDoctorDto);
-    return {
-      messsage: 'Create doctor success',
-      data: result,
-    };
+    try {
+      const result: Doctor = await this.doctorService.create(createDoctorDto);
+      return {
+        message: 'Create doctor success',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error create doctor',
+        error,
+        context: 'DoctorController:create',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @ApiBearerAuth()
-  @Post('get-all-doctor')
+  @Get('get-all-doctor')
   @UseGuards(new JwtGuard(Role.Employee))
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<object> {
-    const result: Doctor[] = await this.doctorService.findAll();
-    return {
-      messsage: 'List doctor',
-      data: result,
-    };
+    try {
+      const result: Doctor[] = await this.doctorService.findAll();
+      return {
+        message: 'List doctor',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error findAll doctor',
+        error,
+        context: 'DoctorController:findAll',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @ApiBearerAuth()
@@ -56,14 +82,23 @@ export class DoctorController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateDoctorDto: UpdateDoctorDto,
   ): Promise<object> {
-    const result: UpdateResult = await this.doctorService.update(
-      id,
-      updateDoctorDto,
-    );
-    return {
-      messsage: 'Update doctor success',
-      data: result,
-    };
+    try {
+      const result: UpdateResult = await this.doctorService.update(
+        id,
+        updateDoctorDto,
+      );
+      return {
+        message: 'Update doctor success',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error update doctor',
+        error,
+        context: 'DoctorController:update',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @ApiBearerAuth()
@@ -71,10 +106,19 @@ export class DoctorController {
   @UseGuards(new JwtGuard(Role.Admin))
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id', ParseIntPipe) id: number): Promise<object> {
-    const result: DeleteResult = await this.doctorService.delete(id);
-    return {
-      messsage: 'Delete doctor success',
-      data: result,
-    };
+    try {
+      const result: DeleteResult = await this.doctorService.delete(id);
+      return {
+        message: 'Delete doctor success',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error delete doctor',
+        error,
+        context: 'DoctorController:delete',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

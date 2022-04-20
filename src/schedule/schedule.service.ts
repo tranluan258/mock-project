@@ -53,13 +53,14 @@ export class ScheduleService {
   }
 
   async findAll(status?: Status): Promise<Schedule[]> {
-    if (status)
+    if (status) {
       return await this.scheduleRepositories.find({
         where: {
           status: status,
         },
         relations: ['patient', 'doctor'],
       });
+    }
 
     return await this.scheduleRepositories.find({
       relations: ['patient', 'doctor'],
