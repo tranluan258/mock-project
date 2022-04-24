@@ -1,11 +1,18 @@
+import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import { AssignScheduleDto } from './dto/assign-schedule.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { Schedule } from './entities/schedule.entity';
 import { MailDataDto } from './dto/mail-data.dto';
 import { Status } from './enum/status.enum';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class ScheduleService {
@@ -52,19 +59,12 @@ export class ScheduleService {
     return result;
   }
 
-  async findAll(status?: Status): Promise<Schedule[]> {
-    if (status) {
-      return await this.scheduleRepositories.find({
-        where: {
-          status: status,
-        },
-        relations: ['patient', 'doctor'],
-      });
-    }
-
-    return await this.scheduleRepositories.find({
-      relations: ['patient', 'doctor'],
-    });
+  async findAll(options: IPaginationOptions): Promise<Pagination<Schedule>> {
+    const queryBuilder = this.scheduleRepositories
+      .createQueryBuilder('schedule')
+      .leftJoinAndSelect('schedule.patient', 'patient')
+      .leftJoinAndSelect('schedule.doctor', 'doctor');
+    return paginate(queryBuilder, options);
   }
 
   async findById(id: number): Promise<Schedule> {
@@ -77,5 +77,24 @@ export class ScheduleService {
 
   async findByIdPatient(id: number): Promise<Schedule> {
     return await this.scheduleRepositories.findOne({ patientId: id });
+  }
+
+  async assignSchedule(
+    assignScheduleDto: AssignScheduleDto,
+  ): Promise<UpdateResult> {
+    return await this.scheduleRepositories
+      .createQueryBuilder()
+      .update(Schedule)
+      .set({ status: assignScheduleDto.status })
+      .where('id = :id', { id: assignScheduleDto.id })
+      .where('status = :status', { status: Status.Create })
+      .execute();
+  }
+
+  async updateSchedule(
+    id: number,
+    updateScheduleDto: UpdateScheduleDto,
+  ): Promise<UpdateResult> {
+    return await this.scheduleRepositories.update(id, updateScheduleDto);
   }
 }

@@ -1,3 +1,4 @@
+import { Account } from './entities/account.entity';
 import { ResponseAccountDto, ResponseListAccountDto } from './dto/response.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Role } from './enum/role.enum';
@@ -86,7 +87,7 @@ export class AccountController {
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
-    type: ResponseAccountDto,
+    type: ResponseListAccountDto,
   })
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<object> {
@@ -101,6 +102,36 @@ export class AccountController {
         message: 'Error list account',
         error,
         context: 'AccountController:findAll',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @UseGuards(new JwtGuard(Role.Admin))
+  @ApiBearerAuth()
+  @Get('get-by-id/:id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponseAccountDto,
+  })
+  @HttpCode(HttpStatus.OK)
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<object> {
+    try {
+      const result: Account = await this.accountService.findById(id);
+      console.log(result);
+      if (!result)
+        throw new HttpException('Not found account', HttpStatus.NOT_FOUND);
+      return {
+        message: 'Find account success',
+        data: result,
+      };
+    } catch (error) {
+      if (error instanceof HttpException)
+        throw new HttpException(error.getResponse(), error.getStatus());
+      this.logger.error({
+        message: 'Error find account',
+        error,
+        context: 'AccountController:findById',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }

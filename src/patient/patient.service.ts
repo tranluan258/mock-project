@@ -19,6 +19,10 @@ export class PatientService {
     return await this.patientRepositories.find();
   }
 
+  async findById(id: number): Promise<Patient> {
+    return await this.patientRepositories.findOne({ id: id });
+  }
+
   async update(
     id: number,
     updatePatientDto: UpdatePatientDto,

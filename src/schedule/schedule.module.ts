@@ -13,8 +13,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'MAIL_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: '127.0.0.1',
-          port: 3001,
+          host: process.env.EMAIL_SERVICE_HOST,
+          port: parseInt(process.env.EMAIL_SERVICE_PORT),
         },
       },
     ]),

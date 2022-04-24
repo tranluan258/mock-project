@@ -16,9 +16,13 @@ export class DoctorService {
   }
 
   async findAll(): Promise<Doctor[]> {
-	  return await this.doctorRepositories.find({
-		  relations: ['faculty'],
-	  });
+    return await this.doctorRepositories.find({
+      relations: ['faculty'],
+    });
+  }
+
+  async findById(id: number): Promise<Doctor> {
+    return await this.doctorRepositories.findOne({ id: id });
   }
 
   async delete(id: number): Promise<DeleteResult> {

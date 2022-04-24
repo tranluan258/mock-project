@@ -17,7 +17,6 @@ export class AccountService {
     const saltOrRounds = 10;
     const hash = await bcrypt.hash(createAccountDto.password, saltOrRounds);
     createAccountDto.password = hash;
-    console.log(createAccountDto.password);
     return this.accountRepositories.save(createAccountDto);
   }
 
@@ -44,6 +43,10 @@ export class AccountService {
 
   async findAll(): Promise<Account[]> {
     return await this.accountRepositories.find();
+  }
+
+  async findById(id: number): Promise<Account> {
+    return await this.accountRepositories.findOne({ id: id });
   }
 
   async remove(id: number): Promise<DeleteResult> {

@@ -79,7 +79,32 @@ export class FacultyController {
       this.logger.error({
         message: 'Error findAll faculty',
         error,
-        context: 'FacultyController:create',
+        context: 'FacultyController:findAll',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: ResponseFacultyDto,
+  })
+  @Get('get-faculty-by-id/:id')
+  @UseGuards(new JwtGuard(Role.Employee))
+  @HttpCode(HttpStatus.OK)
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<object> {
+    try {
+      const result: Faculty = await this.facultyService.findById(id);
+      return {
+        message: 'The faculty',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error findById faculty',
+        error,
+        context: 'FacultyController:findById',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }

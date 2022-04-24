@@ -84,6 +84,31 @@ export class DoctorController {
   }
 
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponseDoctorDto,
+  })
+  @Get('get-doctor-by-id/:id')
+  @UseGuards(new JwtGuard(Role.Employee))
+  @HttpCode(HttpStatus.OK)
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<object> {
+    try {
+      const result: Doctor = await this.doctorService.findById(id);
+      return {
+        message: 'The doctor',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error findById doctor',
+        error,
+        context: 'DoctorController:findById',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth()
   @Put('update-doctor/:id')
   @UseGuards(new JwtGuard(Role.Admin))
   @HttpCode(HttpStatus.OK)

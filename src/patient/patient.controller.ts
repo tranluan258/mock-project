@@ -36,7 +36,7 @@ export class PatientController {
 
   @ApiBearerAuth()
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.OK,
     type: ResponseListPatientDto,
   })
   @Get('get-all')
@@ -53,6 +53,34 @@ export class PatientController {
         message: 'Error findAll patient',
         error,
         context: 'PatientController:findAll',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponsePatientDto,
+  })
+  @Get('get-patient-by-id/:id')
+  @HttpCode(HttpStatus.OK)
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<object> {
+    try {
+      const result: Patient = await this.patientService.findById(id);
+      if (!result)
+        throw new HttpException('Not found patient', HttpStatus.NOT_FOUND);
+      return {
+        message: 'The patient',
+        data: result,
+      };
+    } catch (error) {
+      if (error instanceof HttpException)
+        throw new HttpException(error.getResponse(), error.getStatus());
+      this.logger.error({
+        message: 'Error findById patient',
+        error,
+        context: 'PatientController:findById',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }

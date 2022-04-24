@@ -19,8 +19,8 @@ export class FacultyService {
     return await this.facultyRepositories.find();
   }
 
-  async findOne(id: number): Promise<Faculty> {
-    return await this.facultyRepositories.findOne(id);
+  async findById(id: number): Promise<Faculty> {
+    return await this.facultyRepositories.findOne({ id: id });
   }
 
   async delete(id: number): Promise<DeleteResult> {
