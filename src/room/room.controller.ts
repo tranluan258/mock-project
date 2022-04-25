@@ -51,7 +51,7 @@ export class RoomController {
     } catch (error) {
       this.logger.error({
         message: 'Error findAll room: ',
-        error,
+        error: error,
         context: 'RoomController:findAll',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,7 +76,7 @@ export class RoomController {
     } catch (error) {
       this.logger.error({
         message: 'Error create room: ',
-        error,
+        error: error,
         context: 'RoomController:create',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -108,7 +108,7 @@ export class RoomController {
 
       this.logger.error({
         message: 'Error update room: ',
-        error,
+        error: error,
         context: 'RoomController:update',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -134,7 +134,7 @@ export class RoomController {
 
       this.logger.error({
         message: 'Error delete room: ',
-        error,
+        error: error,
         context: 'RoomController:delete',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);

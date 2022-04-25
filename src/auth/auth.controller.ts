@@ -86,7 +86,7 @@ export class AuthController {
         throw new HttpException(error.getResponse(), error.getStatus());
       this.logger.error({
         message: 'Error login auth',
-        error,
+        error: error,
         context: 'AuthController:signIn',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -133,7 +133,7 @@ export class AuthController {
 
       this.logger.error({
         message: 'Error refresh auth',
-        error,
+        error: error,
         context: 'AuthController:refreshToken',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);

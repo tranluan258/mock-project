@@ -46,7 +46,7 @@ export class AccountController {
     } catch (error) {
       this.logger.error({
         message: 'Error signUp account',
-        error,
+        error: error,
         context: 'AccountController:signUp',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,7 +75,7 @@ export class AccountController {
     } catch (error) {
       this.logger.error({
         message: 'Error addPermission account',
-        error,
+        error: error,
         context: 'AccountController:signIn',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,7 +100,7 @@ export class AccountController {
     } catch (error) {
       this.logger.error({
         message: 'Error list account',
-        error,
+        error: error,
         context: 'AccountController:findAll',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -130,7 +130,7 @@ export class AccountController {
         throw new HttpException(error.getResponse(), error.getStatus());
       this.logger.error({
         message: 'Error find account',
-        error,
+        error: error,
         context: 'AccountController:findById',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -156,7 +156,7 @@ export class AccountController {
 
       this.logger.error({
         message: 'Error delete account',
-        error,
+        error: error,
         context: 'AccountController:delete',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);

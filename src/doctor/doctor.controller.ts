@@ -51,7 +51,7 @@ export class DoctorController {
     } catch (error) {
       this.logger.error({
         message: 'Error create doctor',
-        error,
+        error: error,
         context: 'DoctorController:create',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,7 +76,7 @@ export class DoctorController {
     } catch (error) {
       this.logger.error({
         message: 'Error findAll doctor',
-        error,
+        error: error,
         context: 'DoctorController:findAll',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -101,7 +101,7 @@ export class DoctorController {
     } catch (error) {
       this.logger.error({
         message: 'Error findById doctor',
-        error,
+        error: error,
         context: 'DoctorController:findById',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -128,7 +128,7 @@ export class DoctorController {
     } catch (error) {
       this.logger.error({
         message: 'Error update doctor',
-        error,
+        error: error,
         context: 'DoctorController:update',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -149,7 +149,7 @@ export class DoctorController {
     } catch (error) {
       this.logger.error({
         message: 'Error delete doctor',
-        error,
+        error: error,
         context: 'DoctorController:delete',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);

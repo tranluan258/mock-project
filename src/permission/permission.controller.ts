@@ -53,7 +53,7 @@ export class PermissionController {
     } catch (error) {
       this.logger.error({
         message: 'Error create permission',
-        error,
+        error: error,
         context: 'PermissionController:create',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -73,7 +73,7 @@ export class PermissionController {
     } catch (error) {
       this.logger.error({
         message: 'Error findAll permission',
-        error,
+        error: error,
         context: 'PermissionController:findAll',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -98,7 +98,7 @@ export class PermissionController {
 
       this.logger.error({
         message: 'Error delete permission',
-        error,
+        error: error,
         context: 'PermissionController:delete',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -129,7 +129,7 @@ export class PermissionController {
 
       this.logger.error({
         message: 'Error update permission',
-        error,
+        error: error,
         context: 'PermissionController:update',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);

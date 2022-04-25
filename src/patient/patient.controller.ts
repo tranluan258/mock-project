@@ -51,7 +51,7 @@ export class PatientController {
     } catch (error) {
       this.logger.error({
         message: 'Error findAll patient',
-        error,
+        error: error,
         context: 'PatientController:findAll',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -79,7 +79,7 @@ export class PatientController {
         throw new HttpException(error.getResponse(), error.getStatus());
       this.logger.error({
         message: 'Error findById patient',
-        error,
+        error: error,
         context: 'PatientController:findById',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -105,7 +105,7 @@ export class PatientController {
     } catch (error) {
       this.logger.error({
         message: 'Error create patient',
-        error,
+        error: error,
         context: 'PatientController:create',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -136,7 +136,7 @@ export class PatientController {
 
       this.logger.error({
         message: 'Error update patient',
-        error,
+        error: error,
         context: 'PatientController:update',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -161,7 +161,7 @@ export class PatientController {
 
       this.logger.error({
         message: 'Error delete patient',
-        error,
+        error: error,
         context: 'PatientController:delete',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);

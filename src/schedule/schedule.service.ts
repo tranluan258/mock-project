@@ -13,6 +13,8 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
+import { DistanceDateDto } from './dto/distance-date.dto';
+import e from 'express';
 
 @Injectable()
 export class ScheduleService {
@@ -96,5 +98,51 @@ export class ScheduleService {
     updateScheduleDto: UpdateScheduleDto,
   ): Promise<UpdateResult> {
     return await this.scheduleRepositories.update(id, updateScheduleDto);
+  }
+
+  async findByDate(distanceDateDto: DistanceDateDto): Promise<Schedule[]> {
+    const startDate = new Date(distanceDateDto.startDate);
+    const endDate = new Date(distanceDateDto.endDate);
+
+    return await this.scheduleRepositories
+      .createQueryBuilder('schedule')
+      .where('schedule.dateExamination >= :startDate', { startDate })
+      .andWhere('schedule.dateExamination <= :endDate', { endDate })
+      .leftJoinAndSelect('schedule.patient', 'patient')
+      .leftJoinAndSelect('schedule.doctor', 'doctor')
+      .getMany();
+  }
+
+  async statisticalTurnover(distanceDateDto: DistanceDateDto): Promise<number> {
+    const startDate = new Date(distanceDateDto.startDate);
+    const endDate = new Date(distanceDateDto.endDate);
+
+    const result: Schedule[] = await this.scheduleRepositories
+      .createQueryBuilder('schedule')
+      .where('schedule.dateExamination >= :startDate', { startDate })
+      .andWhere('schedule.dateExamination <= :endDate', { endDate })
+      .select('schedule.price')
+      .getMany();
+
+    let total = 0;
+    result.forEach((el) => {
+      total += el.price;
+    });
+
+    return total;
+  }
+
+  async statisticalByPatient(
+    distanceDateDto: DistanceDateDto,
+  ): Promise<number> {
+    const startDate = new Date(distanceDateDto.startDate);
+    const endDate = new Date(distanceDateDto.endDate);
+
+    return await this.scheduleRepositories
+      .createQueryBuilder('schedule')
+      .where('schedule.dateExamination >= :startDate', { startDate })
+      .andWhere('schedule.dateExamination <= :endDate', { endDate })
+      .select('schedule.patient')
+      .getCount();
   }
 }

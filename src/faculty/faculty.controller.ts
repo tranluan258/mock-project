@@ -53,7 +53,7 @@ export class FacultyController {
     } catch (error) {
       this.logger.error({
         message: 'Error create faculty',
-        error,
+        error: error,
         context: 'FacultyController:create',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,7 +78,7 @@ export class FacultyController {
     } catch (error) {
       this.logger.error({
         message: 'Error findAll faculty',
-        error,
+        error: error,
         context: 'FacultyController:findAll',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -103,7 +103,7 @@ export class FacultyController {
     } catch (error) {
       this.logger.error({
         message: 'Error findById faculty',
-        error,
+        error: error,
         context: 'FacultyController:findById',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -136,7 +136,7 @@ export class FacultyController {
 
       this.logger.error({
         message: 'Error update faculty',
-        error,
+        error: error,
         context: 'FacultyController:update',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -164,7 +164,7 @@ export class FacultyController {
 
       this.logger.error({
         message: 'Error delete faculty',
-        error,
+        error: error,
         context: 'FacultyController:delete',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);

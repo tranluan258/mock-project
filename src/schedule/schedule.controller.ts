@@ -26,13 +26,13 @@ import { Role } from 'src/account/enum/role.enum';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { Schedule } from './entities/schedule.entity';
-import { Status } from './enum/status.enum';
 import { ScheduleService } from './schedule.service';
 import { Cache } from 'cache-manager';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { UpdateResult } from 'typeorm';
+import { DistanceDateDto } from './dto/distance-date.dto';
 
 @ApiTags('Schedule')
 @UseGuards(new JwtGuard(Role.Employee))
@@ -64,7 +64,7 @@ export class ScheduleController {
     } catch (error) {
       this.logger.error({
         message: 'Error create schedule: ',
-        error,
+        error: error,
         context: 'ScheduleController:create',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -111,7 +111,7 @@ export class ScheduleController {
     } catch (error) {
       this.logger.error({
         message: 'Error schedule findAll: ',
-        error,
+        error: error,
         context: 'ScheduleController:findAll',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -135,7 +135,7 @@ export class ScheduleController {
     } catch (error) {
       this.logger.error({
         message: 'Error schedule findById: ',
-        error,
+        error: error,
         context: 'ScheduleController:findById',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -172,7 +172,7 @@ export class ScheduleController {
 
       this.logger.error({
         message: 'Error schedule assignSchedule: ',
-        error,
+        error: error,
         context: 'ScheduleController:assignSchedule',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -208,8 +208,88 @@ export class ScheduleController {
 
       this.logger.error({
         message: 'Error schedule updateSchedule: ',
-        error,
+        error: error,
         context: 'ScheduleController:updateSchedule',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ResponseListScheduleDto,
+  })
+  @Post('search-by-date')
+  @HttpCode(HttpStatus.OK)
+  async findByDate(@Body() distanceDateDto: DistanceDateDto): Promise<object> {
+    try {
+      const result: Schedule[] = await this.scheduleService.findByDate(
+        distanceDateDto,
+      );
+      return {
+        message: 'List schedule by startDate and endDate',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error schedule searchBydDateSchedule: ',
+        error: error,
+        context: 'ScheduleController:searchByDateSchedule',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @Post('statistical-turnover')
+  @HttpCode(HttpStatus.OK)
+  async statisticalTurnover(
+    @Body() distanceDateDto: DistanceDateDto,
+  ): Promise<object> {
+    try {
+      const result: number = await this.scheduleService.statisticalTurnover(
+        distanceDateDto,
+      );
+      return {
+        message: 'statisticalTurnover',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error schedule statisticalTurnover: ',
+        error: error,
+        context: 'ScheduleController:statisticalTurnover',
+      });
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @Post('statistical-by-patient')
+  @HttpCode(HttpStatus.OK)
+  async statisticalByPatient(
+    @Body() distanceDateDto: DistanceDateDto,
+  ): Promise<object> {
+    try {
+      const result: number = await this.scheduleService.statisticalByPatient(
+        distanceDateDto,
+      );
+      return {
+        message: 'statisticalByPatient',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error({
+        message: 'Error schedule statisticalByPatient: ',
+        error: error,
+        context: 'ScheduleController:statisticalByPatient',
       });
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
