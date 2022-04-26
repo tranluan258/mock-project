@@ -32,7 +32,6 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { UpdateResult } from 'typeorm';
-import { DistanceDateDto } from './dto/distance-date.dto';
 
 @ApiTags('Schedule')
 @UseGuards(new JwtGuard(Role.Employee))
@@ -57,6 +56,11 @@ export class ScheduleController {
       createScheduleDto.dateCreated = timestamp;
       createScheduleDto.dateModified = timestamp;
       const result = await this.scheduleService.create(createScheduleDto);
+
+      // setTimeout(async () => {
+      //   await this.cacheManager.del('schedule');
+      // });
+
       return {
         message: 'Create schedule success',
         data: result,
@@ -220,12 +224,18 @@ export class ScheduleController {
     status: HttpStatus.OK,
     type: ResponseListScheduleDto,
   })
-  @Post('search-by-date')
+  @ApiQuery({ name: 'startDate', required: true, type: String })
+  @ApiQuery({ name: 'endDate', required: true, type: String })
+  @Get('search-by-date')
   @HttpCode(HttpStatus.OK)
-  async findByDate(@Body() distanceDateDto: DistanceDateDto): Promise<object> {
+  async findByDate(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ): Promise<object> {
     try {
       const result: Schedule[] = await this.scheduleService.findByDate(
-        distanceDateDto,
+        startDate,
+        endDate,
       );
       return {
         message: 'List schedule by startDate and endDate',
@@ -245,14 +255,18 @@ export class ScheduleController {
   @ApiResponse({
     status: HttpStatus.OK,
   })
-  @Post('statistical-turnover')
+  @ApiQuery({ name: 'startDate', required: true, type: String })
+  @ApiQuery({ name: 'endDate', required: true, type: String })
+  @Get('statistical-turnover')
   @HttpCode(HttpStatus.OK)
   async statisticalTurnover(
-    @Body() distanceDateDto: DistanceDateDto,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
   ): Promise<object> {
     try {
       const result: number = await this.scheduleService.statisticalTurnover(
-        distanceDateDto,
+        startDate,
+        endDate,
       );
       return {
         message: 'statisticalTurnover',
@@ -272,14 +286,18 @@ export class ScheduleController {
   @ApiResponse({
     status: HttpStatus.OK,
   })
-  @Post('statistical-by-patient')
+  @ApiQuery({ name: 'startDate', required: true, type: String })
+  @ApiQuery({ name: 'endDate', required: true, type: String })
+  @Get('statistical-by-patient')
   @HttpCode(HttpStatus.OK)
   async statisticalByPatient(
-    @Body() distanceDateDto: DistanceDateDto,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
   ): Promise<object> {
     try {
       const result: number = await this.scheduleService.statisticalByPatient(
-        distanceDateDto,
+        startDate,
+        endDate,
       );
       return {
         message: 'statisticalByPatient',

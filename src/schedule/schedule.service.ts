@@ -13,8 +13,6 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { DistanceDateDto } from './dto/distance-date.dto';
-import e from 'express';
 
 @Injectable()
 export class ScheduleService {
@@ -100,27 +98,31 @@ export class ScheduleService {
     return await this.scheduleRepositories.update(id, updateScheduleDto);
   }
 
-  async findByDate(distanceDateDto: DistanceDateDto): Promise<Schedule[]> {
-    const startDate = new Date(distanceDateDto.startDate);
-    const endDate = new Date(distanceDateDto.endDate);
+  async findByDate(startDate: string, endDate: string): Promise<Schedule[]> {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
 
     return await this.scheduleRepositories
       .createQueryBuilder('schedule')
-      .where('schedule.dateExamination >= :startDate', { startDate })
-      .andWhere('schedule.dateExamination <= :endDate', { endDate })
+      .where('schedule.dateExamination >= :start', { start })
+      .andWhere('schedule.dateExamination <= :end', { end })
       .leftJoinAndSelect('schedule.patient', 'patient')
       .leftJoinAndSelect('schedule.doctor', 'doctor')
       .getMany();
   }
 
-  async statisticalTurnover(distanceDateDto: DistanceDateDto): Promise<number> {
-    const startDate = new Date(distanceDateDto.startDate);
-    const endDate = new Date(distanceDateDto.endDate);
+  async statisticalTurnover(
+    startDate: string,
+    endDate: string,
+  ): Promise<number> {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
 
     const result: Schedule[] = await this.scheduleRepositories
       .createQueryBuilder('schedule')
-      .where('schedule.dateExamination >= :startDate', { startDate })
-      .andWhere('schedule.dateExamination <= :endDate', { endDate })
+      .where('schedule.status = :status', { status: Status.Complete })
+      .andWhere('schedule.dateExamination >= :start', { start })
+      .andWhere('schedule.dateExamination <= :end', { end })
       .select('schedule.price')
       .getMany();
 
@@ -133,15 +135,17 @@ export class ScheduleService {
   }
 
   async statisticalByPatient(
-    distanceDateDto: DistanceDateDto,
+    startDate: string,
+    endDate: string,
   ): Promise<number> {
-    const startDate = new Date(distanceDateDto.startDate);
-    const endDate = new Date(distanceDateDto.endDate);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
 
     return await this.scheduleRepositories
       .createQueryBuilder('schedule')
-      .where('schedule.dateExamination >= :startDate', { startDate })
-      .andWhere('schedule.dateExamination <= :endDate', { endDate })
+      .where('schedule.status = :status', { status: Status.Complete })
+      .andWhere('schedule.dateExamination >= :start', { start })
+      .andWhere('schedule.dateExamination <= :end', { end })
       .select('schedule.patient')
       .getCount();
   }

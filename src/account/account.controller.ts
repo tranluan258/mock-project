@@ -118,7 +118,6 @@ export class AccountController {
   async findById(@Param('id', ParseIntPipe) id: number): Promise<object> {
     try {
       const result: Account = await this.accountService.findById(id);
-      console.log(result);
       if (!result)
         throw new HttpException('Not found account', HttpStatus.NOT_FOUND);
       return {

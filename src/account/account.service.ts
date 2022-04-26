@@ -42,11 +42,16 @@ export class AccountService {
   }
 
   async findAll(): Promise<Account[]> {
-    return await this.accountRepositories.find();
+    return await this.accountRepositories.find({
+      relations: ['permissions'],
+    });
   }
 
   async findById(id: number): Promise<Account> {
-    return await this.accountRepositories.findOne({ id: id });
+    return await this.accountRepositories.findOne({
+      where: { id: id },
+      relations: ['permissions'],
+    });
   }
 
   async remove(id: number): Promise<DeleteResult> {
