@@ -57,9 +57,14 @@ export class ScheduleController {
       createScheduleDto.dateModified = timestamp;
       const result = await this.scheduleService.create(createScheduleDto);
 
-      // setTimeout(async () => {
-      //   await this.cacheManager.del('schedule');
-      // });
+      //delete key in redis when add schedule
+      setTimeout(async () => {
+        const key: [] = await this.cacheManager.store.keys('*schedule*');
+        for (let index = 0; index < key.length; index++) {
+          const element: string = key[index];
+          await this.cacheManager.del(element);
+        }
+      });
 
       return {
         message: 'Create schedule success',
@@ -102,11 +107,14 @@ export class ScheduleController {
         page,
         limit,
       });
-      setTimeout(async () => {
-        await this.cacheManager.set(key, JSON.stringify(result.items), {
-          ttl: 3600 * 24,
+
+      if (result.items.length > 0) {
+        setTimeout(async () => {
+          await this.cacheManager.set(key, JSON.stringify(result.items), {
+            ttl: 3600 * 24,
+          });
         });
-      });
+      }
 
       return {
         message: 'List schedule',
@@ -166,6 +174,15 @@ export class ScheduleController {
           HttpStatus.NOT_FOUND,
         );
 
+      //delete key in redis when add schedule
+      setTimeout(async () => {
+        const key: [] = await this.cacheManager.store.keys('*schedule*');
+        for (let index = 0; index < key.length; index++) {
+          const element: string = key[index];
+          await this.cacheManager.del(element);
+        }
+      });
+
       return {
         message: 'Assign schedule success',
         data: result,
@@ -201,6 +218,15 @@ export class ScheduleController {
 
       if (result.affected <= 0)
         throw new HttpException('Not found schedule', HttpStatus.NOT_FOUND);
+
+      //delete key in redis when add schedule
+      setTimeout(async () => {
+        const key: [] = await this.cacheManager.store.keys('*schedule*');
+        for (let index = 0; index < key.length; index++) {
+          const element: string = key[index];
+          await this.cacheManager.del(element);
+        }
+      });
 
       return {
         message: 'Update schedule success',

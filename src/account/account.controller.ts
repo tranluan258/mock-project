@@ -39,6 +39,10 @@ export class AccountController {
   async create(@Body() createAccountDto: CreateAccountDto): Promise<object> {
     try {
       const result = await this.accountService.create(createAccountDto);
+      if (result == null)
+        return {
+          message: 'Username is existed',
+        };
       return {
         message: 'Create account success',
         data: result,

@@ -16,7 +16,7 @@ export class Account {
   id: number;
 
   @ApiProperty({ type: String })
-  @Column({ length: 100, nullable: false })
+  @Column({ length: 100, nullable: false, unique: true })
   username: string;
 
   @ApiProperty({ type: String })

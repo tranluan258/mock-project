@@ -14,6 +14,11 @@ export class AccountService {
   ) {}
 
   async create(createAccountDto: CreateAccountDto): Promise<Account> {
+    const findAccount: Account = await this.accountRepositories.findOne({
+      username: createAccountDto.username,
+    });
+
+    if (findAccount) return null;
     const saltOrRounds = 10;
     const hash = await bcrypt.hash(createAccountDto.password, saltOrRounds);
     createAccountDto.password = hash;

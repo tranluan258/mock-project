@@ -117,7 +117,7 @@ export class AuthController {
         );
 
       await this.cacheManager.del(tokenDto.token);
-      await this.cacheManager.set(tokenDto.token, payload); //set token in redis because tll expiresIn 40minutes;
+      await this.cacheManager.set(tokenDto.token, payload, { ttl: 60 * 40 }); //set token in redis because tll expiresIn 40minutes;
 
       const accessToken = this.jwtService.sign(payload, {
         secret: process.env.JWT_SECRET,
