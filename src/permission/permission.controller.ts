@@ -6,7 +6,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePermissionDto } from './dto/create-permission.dto';
-import { Role } from 'src/account/enum/role.enum';
+import { Role } from '../account/enum/role.enum';
 import {
   Body,
   Controller,
@@ -22,7 +22,7 @@ import {
   Get,
   Inject,
 } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 import { PermissionService } from './permission.service';
 import { Logger } from 'winston';
 

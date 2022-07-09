@@ -22,8 +22,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/account/enum/role.enum';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { Role } from '../account/enum/role.enum';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { Schedule } from './entities/schedule.entity';
 import { ScheduleService } from './schedule.service';

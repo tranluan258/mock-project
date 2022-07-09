@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Permission } from 'src/permission/entities/permission.entity';
+import { Permission } from '../../permission/entities/permission.entity';
 import {
   Entity,
   Column,

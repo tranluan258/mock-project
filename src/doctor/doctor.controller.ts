@@ -1,5 +1,5 @@
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { Role } from 'src/account/enum/role.enum';
+import { Role } from '../account/enum/role.enum';
 import { JwtGuard } from './../auth/guard/jwt.guard';
 import {
   Body,

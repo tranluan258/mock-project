@@ -15,8 +15,8 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiResponse } from '@nestjs/swagger';
-import { Role } from 'src/account/enum/role.enum';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { Role } from '../account/enum/role.enum';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';

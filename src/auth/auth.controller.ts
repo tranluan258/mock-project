@@ -1,7 +1,7 @@
 import { ResponseSignInDto } from './dto/response.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { TokenDto } from './dto/token.dto';
-import { LoginDto } from 'src/auth/dto/login.dto';
+import { LoginDto } from './dto/login.dto';
 import {
   Body,
   CACHE_MANAGER,

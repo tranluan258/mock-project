@@ -1,5 +1,5 @@
 import { Doctor } from './../../doctor/entities/doctor.entity';
-import { Schedule } from 'src/schedule/entities/schedule.entity';
+import { Schedule } from '../../schedule/entities/schedule.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 

@@ -16,8 +16,8 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/account/enum/role.enum';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { Role } from '../account/enum/role.enum';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateFacultyDto } from './dto/create-faculty.dto';
 import { UpdateFacultyDto } from './dto/update-faculty.dto';
